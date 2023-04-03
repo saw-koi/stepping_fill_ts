@@ -21,3 +21,24 @@ test('1 width canvas fill', () => {
   while(proc.proceed()) {};
   expect(canvas.checkResult()).toBe(true);
 });
+
+test('no turn right downward fill test', () => {
+  const canvas = new MockCanvas([
+    's - - - - - ',
+    '- - - - - - ',
+    '- - - - - # ',
+    '- - - # # - ',
+    '- - # - - - ',
+    '- - # - - - ',
+  ],[
+    '* * * * * * ',
+    '1 * * * * * ',
+    '* 2 * * * # ',
+    '* * 3 # # - ',
+    '* * # - - - ',
+    '* * # - - - ',
+  ]);
+  const proc = new SteppingFillProcessor(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.checkResult()).toBe(true);
+});

@@ -8,8 +8,8 @@ export class MockCanvas implements CanvasFillInterface {
   currentNumber: number = 0;
   isReverseHappened: boolean = false;
   constructor(initialWallMap: Array<string>, expectedMap: Array<string>) {
-    this.data = initialWallMap.map((s) => s.replace(" ", "").split(""));
-    this.expected = expectedMap.map((s) => s.replace(" ", "").split(""));
+    this.data = initialWallMap.map((s) => s.replace(/ /g, "").split(""));
+    this.expected = expectedMap.map((s) => s.replace(/ /g, "").split(""));
     this.height = initialWallMap.length;
     this.width = Math.max(...this.data.map((line) => line.length));
   }

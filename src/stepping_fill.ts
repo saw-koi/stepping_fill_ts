@@ -3,7 +3,7 @@ import { NodeBasePos } from './node_base_pos'
 
 export class SteppingFillProcessor {
   canvasFill: CanvasFillInterface;
-  fillNode: FillNode;
+  fillNodeQueue: Array<FillNode> = [];
 
   constructor(
     canvasFill: CanvasFillInterface,
@@ -12,11 +12,19 @@ export class SteppingFillProcessor {
   ) {
     this.canvasFill = canvasFill;
     const base = new NodeBasePos(x, y, 0);
-    this.fillNode = new FillNode(this, x, y, 1, 1, base);
+    this.fillNodeQueue.push(new FillNode(this, x, y, 1, 1, base));
+  }
+
+  addNode(node: FillNode): void {
+    this.fillNodeQueue.push(node);
   }
 
   proceed(): boolean {
-    return this.fillNode.proceed();
+    const fillNode = this.fillNodeQueue.shift();
+    if(fillNode === undefined) throw new Error("No node left in queue");
+
+    if(fillNode.proceed()) this.fillNodeQueue.push(fillNode);
+    return this.fillNodeQueue.length > 0;
   }
 
   fill(x:number, y:number) {
