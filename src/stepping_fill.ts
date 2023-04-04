@@ -1,9 +1,12 @@
 import { FillNode } from './fill_node'
-import { NodeBasePos } from './node_base_pos'
+import { NodeBasePos, NodeBasePosFactory } from './node_base_pos'
+import { NodePriorityQueue } from './node_priority_queue';
 
 export class SteppingFillProcessor {
   canvasFill: CanvasFillInterface;
   fillNodeQueue: Array<FillNode> = [];
+  fillNodePriorityQueue: NodePriorityQueue = new NodePriorityQueue();
+  nodeBasePosFactory: NodeBasePosFactory = new NodeBasePosFactory();
 
   constructor(
     canvasFill: CanvasFillInterface,
@@ -11,20 +14,20 @@ export class SteppingFillProcessor {
     y: number,
   ) {
     this.canvasFill = canvasFill;
-    const base = new NodeBasePos(x, y, 0);
-    this.fillNodeQueue.push(new FillNode(this, x, y, 1, 1, base));
+    const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
+    this.fillNodePriorityQueue.addFillNode(new FillNode(this, x, y, 1, 1, base));
   }
 
   addNode(node: FillNode): void {
-    this.fillNodeQueue.push(node);
+    this.fillNodePriorityQueue.addFillNode(node);
   }
 
   proceed(): boolean {
-    const fillNode = this.fillNodeQueue.shift();
+    const fillNode = this.fillNodePriorityQueue.popFillNode();
     if(fillNode === undefined) throw new Error("No node left in queue");
 
-    if(fillNode.proceed()) this.fillNodeQueue.push(fillNode);
-    return this.fillNodeQueue.length > 0;
+    if(fillNode.proceed()) this.fillNodePriorityQueue.addFillNode(fillNode);
+    return this.fillNodePriorityQueue.getLength() > 0;
   }
 
   fill(x:number, y:number) {
