@@ -6,7 +6,6 @@ export class MockCanvas implements CanvasFillInterface {
   width: number;
   height: number;
   currentNumber: number = 0;
-  isReverseHappened: boolean = false;
   constructor(initialWallMap: Array<string>, expectedMap: Array<string>) {
     this.data = initialWallMap.map((s) => s.replace(/ /g, "").split(""));
     this.expected = expectedMap.map((s) => s.replace(/ /g, "").split(""));
@@ -24,12 +23,13 @@ export class MockCanvas implements CanvasFillInterface {
   fillPoint(x: number, y: number): void {
     if(this.expected[y][x].match(/[0-9]/)) {
       const expectedNumber = Number(this.expected[y][x]);
-      if(this.currentNumber > expectedNumber) {
-        this.isReverseHappened = true;
+      if(this.currentNumber < expectedNumber) {
+        this.currentNumber = expectedNumber;
       }
-      this.currentNumber = expectedNumber;
+      this.data[y][x] = `${this.currentNumber}`;
+    } else {
+      this.data[y][x] = "*";
     }
-    this.data[y][x] = "*";
   }
   getWidth(): number {
     return this.width;
@@ -42,19 +42,10 @@ export class MockCanvas implements CanvasFillInterface {
     if(y<0 || this.height <= y) return true;
     return this.data[y][x] === "#";
   }
-  checkResult(): boolean {
-    if(this.isReverseHappened) return false;
-    for(let y=0; y<this.expected.length; y++) {
-      for(let x=0; x<this.expected[y].length; x++) {
-        if(this.expected[y][x] === "#") {
-          if(this.data[y][x] !== "#") return false;
-        } else if(this.expected[y][x] === "-") {
-          if(this.data[y][x] !== "-") return false;
-        } else {
-          if(this.data[y][x] !== "*") return false;
-        }
-      }
-    }
-    return true;
-  };
+  getCurrentDataAsString(): string {
+    return this.data.map((line) => line.join(" ")).join("\n");
+  }
+  getExpectedAsString(): string {
+    return this.expected.map((line) => line.join(" ")).join("\n");
+  }
 }

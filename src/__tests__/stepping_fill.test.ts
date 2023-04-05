@@ -19,7 +19,7 @@ test('1 width canvas fill', () => {
   ]);
   const proc = new SteppingFillProcessor(canvas, ...canvas.getStartingXY());
   while(proc.proceed()) {};
-  expect(canvas.checkResult()).toBe(true);
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
 
 test('no turn right downward fill test', () => {
@@ -40,7 +40,7 @@ test('no turn right downward fill test', () => {
   ]);
   const proc = new SteppingFillProcessor(canvas, ...canvas.getStartingXY());
   while(proc.proceed()) {};
-  expect(canvas.checkResult()).toBe(true);
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
 
 test('no turn right downward fill order test', () => {
@@ -61,5 +61,5 @@ test('no turn right downward fill order test', () => {
   ]);
   const proc = new SteppingFillProcessor(canvas, ...canvas.getStartingXY());
   while(proc.proceed()) {};
-  expect(canvas.checkResult()).toBe(true);
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
