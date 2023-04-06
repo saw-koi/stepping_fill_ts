@@ -19,19 +19,19 @@ test("multi basepos node priority test (safe float calculation)", () => {
   const base_distance_12 = new NodeBasePos(300, 200, 12, 2);
 
   // Full distance 11
-  queue.addFillNode(new FillNode(proc, 101, 200, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(101, 200, 1, 1, base_distance_10, null, null));
 
   // Full distance 13
-  queue.addFillNode(new FillNode(proc, 100, 203, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(100, 203, 1, 1, base_distance_10, null, null));
 
   // Full distance 15
-  queue.addFillNode(new FillNode(proc, 103, 204, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(103, 204, 1, 1, base_distance_10, null, null));
 
   // Full distance 12
-  queue.addFillNode(new FillNode(proc, 300, 200, 1, 1, base_distance_12, null, null));
+  queue.addFillNode(proc.createFillNode(300, 200, 1, 1, base_distance_12, null, null));
 
   // Full distance 14
-  queue.addFillNode(new FillNode(proc, 302, 200, 1, 1, base_distance_12, null, null));
+  queue.addFillNode(proc.createFillNode(302, 200, 1, 1, base_distance_12, null, null));
 
   const rst = [];
   while(queue.getLength() > 0) {
@@ -47,25 +47,25 @@ test("multi basepos node priority test (wrong float calculation)", () => {
   const base_distance_12 = new NodeBasePos(300, 200, 12, 12);
 
   // Full distance 11
-  queue.addFillNode(new FillNode(proc, 101, 200, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(101, 200, 1, 1, base_distance_10, null, null));
 
   // Full distance 13
-  queue.addFillNode(new FillNode(proc, 100, 203, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(100, 203, 1, 1, base_distance_10, null, null));
 
   // Full distance 15
-  queue.addFillNode(new FillNode(proc, 103, 204, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(103, 204, 1, 1, base_distance_10, null, null));
 
   // Full distance 17
-  queue.addFillNode(new FillNode(proc, 107, 200, 1, 1, base_distance_10, null, null));
+  queue.addFillNode(proc.createFillNode(107, 200, 1, 1, base_distance_10, null, null));
 
   // Full distance 12
-  queue.addFillNode(new FillNode(proc, 300, 200, 1, 1, base_distance_12, null, null));
+  queue.addFillNode(proc.createFillNode(300, 200, 1, 1, base_distance_12, null, null));
 
   // Full distance 14
-  queue.addFillNode(new FillNode(proc, 302, 200, 1, 1, base_distance_12, null, null));
+  queue.addFillNode(proc.createFillNode(302, 200, 1, 1, base_distance_12, null, null));
 
   // Full distance 16
-  queue.addFillNode(new FillNode(proc, 306, 200, 1, 1, base_distance_12, null, null));
+  queue.addFillNode(proc.createFillNode(306, 200, 1, 1, base_distance_12, null, null));
 
   const rst_10 = [];
   const rst_12 = [];

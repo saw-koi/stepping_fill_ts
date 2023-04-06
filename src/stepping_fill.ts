@@ -15,7 +15,12 @@ export class SteppingFillProcessor {
   ) {
     this.canvasFill = canvasFill;
     const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
-    this.fillNodePriorityQueue.addFillNode(new FillNode(this, x, y, 1, 1, base));
+    this.fillNodePriorityQueue.addFillNode(this.createFillNode(x, y, 1, 1, base));
+  }
+
+  createFillNode(x:number, y:number, dx:number, dy:number, base: NodeBasePos,
+    prev: FillNode|null = null, next: FillNode|null = null) {
+    return FillNode.create(this, x, y, dx, dy, base, prev, next);
   }
 
   addNode(node: FillNode): void {
