@@ -1,5 +1,5 @@
 import { SteppingFillProcessor } from '../stepping_fill'
-import { DebugSteppingFillProcessorWithoutPropagation } from '../testing_common/limited_stepping_fill';
+import { DebugSteppingFillProcessorWithoutExceedingQuadrant, DebugSteppingFillProcessorWithoutPropagation } from '../testing_common/limited_stepping_fill';
 import { MockCanvas } from '../testing_common/mock_canvas'
 
 test('1 width canvas fill', () => {
@@ -144,6 +144,29 @@ test('no turn right downward fill left right both shadow test', () => {
     '* - - - * * ',
   ]);
   const proc = new DebugSteppingFillProcessorWithoutPropagation(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
+
+test('head node turning test', () => {
+  const canvas = new MockCanvas([
+    's - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - # # # # # # # # ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+  ],[
+    '* * * * 1 2 3 * * 4 5 6 ',
+    '* * * * 1 3 * * * 4 6 * ',
+    '* * * * 1 3 * * * 4 6 * ',
+    '* * * 1 # # # # # # # # ',
+    '1 1 1 2 3 * * 4 5 6 * * ',
+    '2 3 3 3 * * * 4 6 * * * ',
+    '3 * * * * * 4 5 6 * * * ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
   while(proc.proceed()) {};
   expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });

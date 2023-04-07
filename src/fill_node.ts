@@ -54,11 +54,18 @@ export class FillNode {
     dy:number,
     base:NodeBasePos,
     prev: FillNode|null = null,
-    next: FillNode|null = null) {
+    next: FillNode|null = null) {      
     return new this(fillProcessor, x, y, dx, dy, base, prev, next);
   }
 
   proceed(): boolean {
+    if( this.fillProcessor.isFilled( this.x, this.y ) ) {
+      const next = this.next;
+      const prev = this.prev;
+      if(next !== null) next.prev = prev;
+      if(prev !== null) prev.next = next;
+      return false;
+    }
     if( this.prev !== null && !this.prev.active ) {
       if( 0 < compareAbsPosFromSafePos(
         this.base.x, this.base.y,
@@ -101,8 +108,18 @@ export class FillNode {
         ) ) {
         const newNode = this.createNext(this.x+this.dx, this.y);
         this.fillProcessor.addNode(newNode);
+      } else {
+        this.createXNextNodeOutOfRange();
       }
     }
+  }
+
+  createXNextNodeOutOfRange() {
+    const recentDistance = this.base.getDistance(this.x, this.y);
+    const newBasePos = this.fillProcessor.createNodeBasePos(this.x, this.y, this.base.distance + recentDistance);
+    const newNode = this.fillProcessor.createFillNode(this.x+this.dx, this.y,
+      this.dx, this.dy, newBasePos, null, null);
+    this.fillProcessor.addNode(newNode);
   }
 
   createPrev(x: number, y:number): FillNode {

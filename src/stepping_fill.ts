@@ -2,11 +2,29 @@ import { FillNode } from './fill_node'
 import { NodeBasePos, NodeBasePosFactory } from './node_base_pos'
 import { NodePriorityQueue } from './node_priority_queue';
 
+class FilledPointMap {
+  width: number;
+  height: number;
+  private points: Array<boolean>;
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.points = new Array(width*height).fill(false);
+  }
+  isPointFilled(x:number, y:number): boolean {
+    return this.points[y*this.width + x];
+  }
+  markPointFilled(x:number, y:number) {
+    this.points[y*this.width + x] = true;
+  }
+}
+
 export class SteppingFillProcessor {
   canvasFill: CanvasFillInterface;
   fillNodeQueue: Array<FillNode> = [];
   fillNodePriorityQueue: NodePriorityQueue = new NodePriorityQueue();
-  nodeBasePosFactory: NodeBasePosFactory = new NodeBasePosFactory();
+  private nodeBasePosFactory: NodeBasePosFactory = new NodeBasePosFactory();
+  private filledPointMap: FilledPointMap;
 
   constructor(
     canvasFill: CanvasFillInterface,
@@ -14,13 +32,21 @@ export class SteppingFillProcessor {
     y: number,
   ) {
     this.canvasFill = canvasFill;
+    this.filledPointMap = new FilledPointMap(canvasFill.getWidth(), canvasFill.getHeight());
     const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
     this.fillNodePriorityQueue.addFillNode(this.createFillNode(x, y, 1, 1, base));
+  }
+  isFilled(x:number, y:number): boolean {
+    return this.filledPointMap.isPointFilled(x, y);
   }
 
   createFillNode(x:number, y:number, dx:number, dy:number, base: NodeBasePos,
     prev: FillNode|null = null, next: FillNode|null = null) {
     return FillNode.create(this, x, y, dx, dy, base, prev, next);
+  }
+
+  createNodeBasePos(x:number, y:number, distance:number): NodeBasePos {
+    return this.nodeBasePosFactory.createNodeBasePos(x, y, distance);
   }
 
   addNode(node: FillNode): void {
@@ -36,6 +62,7 @@ export class SteppingFillProcessor {
   }
 
   fill(x:number, y:number) {
+    this.filledPointMap.markPointFilled(x, y);
     this.canvasFill.fillPoint(x, y);
   }
 

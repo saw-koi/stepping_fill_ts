@@ -10,6 +10,12 @@ export class NodeBasePos {
     this.distance = distance;
     this.id = id;
   }
+
+  getDistance(x:number, y:number) {
+    const relX = x - this.x;
+    const relY = y - this.y;
+    return Math.sqrt( relX*relX + relY*relY );
+  }
 }
 
 export class NodeBasePosFactory {
