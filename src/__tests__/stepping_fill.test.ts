@@ -88,6 +88,28 @@ test('no turn right downward fill right shadow test', () => {
   expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
 
+test('no turn right downward fill right shadow test2', () => {
+  const canvas = new MockCanvas([
+    's - # # # # ',
+    '- - # # # # ',
+    '- - - - - - ',
+    '- - - - - - ',
+    '- - - - - - ',
+    '- - - - - - ',
+    '- - - - - - ',
+  ],[
+    '* * # # # # ',
+    '* * # # # # ',
+    '* * - - - - ',
+    '* * - - - - ',
+    '* * * - - - ',
+    '* * * - - - ',
+    '* * * * - - ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutPropagation(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
 
 test('no turn right downward fill left shadow test', () => {
   const canvas = new MockCanvas([
@@ -165,6 +187,52 @@ test('head node turning test', () => {
     '1 1 1 2 3 * * 4 5 6 * * ',
     '2 3 3 3 * * * 4 6 * * * ',
     '3 * * * * * 4 5 6 * * * ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
+
+test('head node turning on having 2 or bigger gap from prev node test', () => {
+  const canvas = new MockCanvas([
+    's - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - # # # # # # # ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+  ],[
+    '* * * * 1 2 3 * * 4 5 6 ',
+    '* * * * 1 3 * * * 4 6 * ',
+    '* * * * 1 # # # # # # # ',
+    '* * * 1 2 3 * * 4 5 6 * ',
+    '1 1 1 2 3 * * * 4 6 * * ',
+    '2 3 3 3 * * * * 4 6 * * ',
+    '3 * * * * * * 4 5 6 * * ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
+
+test('head node turning by thick wall test', () => {
+  const canvas = new MockCanvas([
+    's - - - - - - - - - - - ',
+    '- - - - - # # # # # # # ',
+    '- - - - - # # # # # # # ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+    '- - - - - - - - - - - - ',
+  ],[
+    '* * * * 1 2 3 * * 4 5 6 ',
+    '* * * * 1 # # # # # # # ',
+    '* * * * 1 # # # # # # # ',
+    '* * * 1 2 3 * * 4 5 6 * ',
+    '1 1 1 2 3 * * * 4 6 * * ',
+    '2 3 3 3 * * * * 4 6 * * ',
+    '3 * * * * * * 4 5 6 * * ',
   ]);
   const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
   while(proc.proceed()) {};

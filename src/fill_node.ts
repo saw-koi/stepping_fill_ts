@@ -54,7 +54,7 @@ export class FillNode {
     dy:number,
     base:NodeBasePos,
     prev: FillNode|null = null,
-    next: FillNode|null = null) {      
+    next: FillNode|null = null) {
     return new this(fillProcessor, x, y, dx, dy, base, prev, next);
   }
 
@@ -80,14 +80,40 @@ export class FillNode {
       }
     }
     if(this.fillProcessor.isWall(this.x, this.y)) {
+      this.compensateXNextNodeCreationOnGap();
       this.active = false;
       return false;
     } else {
-      this.fillProcessor.fill(this.x, this.y);
+      this.fillProcessor.fill(this.x, this.y, this.base.id);
       this.propagateOnHead();
 
       this.y += this.dy;
       return true;
+    }
+  }
+
+  compensateXNextNodeCreationOnGap() {
+    const targetX = this.x;
+    const dx = this.dx;
+    const dy = this.dy;
+    const base = this.base;
+    const fillProcessor = this.fillProcessor;
+    let node: FillNode = this;
+    for( let y = this.y + dy;
+      fillProcessor.getBasePosIdWhichFilledPoint(targetX - dx, y) == base.id;
+      y += dy) {
+
+      if(fillProcessor.isWall(targetX, y)) {
+        node = node.createPrev(targetX, y);
+        node.active = false;
+      } else if(!fillProcessor.isFilled(targetX, y)) {
+        if( !node.active && 0 <= compareAbsPosFromSafePos(base.x, base.y, targetX, y, node.x-dx, node.y+dy) ) {
+          const newNode = node.createPrev(targetX, y);
+          this.fillProcessor.addNode(newNode);
+        } else {
+          this.createSameXLaterNodeOutOfRangeOnCompensating(targetX, y);
+        }
+      }
     }
   }
 
@@ -118,6 +144,15 @@ export class FillNode {
     const recentDistance = this.base.getDistance(this.x, this.y);
     const newBasePos = this.fillProcessor.createNodeBasePos(this.x, this.y, this.base.distance + recentDistance);
     const newNode = this.fillProcessor.createFillNode(this.x+this.dx, this.y,
+      this.dx, this.dy, newBasePos, null, null);
+    this.fillProcessor.addNode(newNode);
+  }
+
+  createSameXLaterNodeOutOfRangeOnCompensating(targetX:number, targetY:number) {
+    /* TODO: Process similar to createXNextNodeOutOfRange() so make common function */
+    const recentDistance = this.base.getDistance(targetX-this.dx, targetY);
+    const newBasePos = this.fillProcessor.createNodeBasePos(targetX-this.dx, targetY, this.base.distance + recentDistance);
+    const newNode = this.fillProcessor.createFillNode(targetX, targetY,
       this.dx, this.dy, newBasePos, null, null);
     this.fillProcessor.addNode(newNode);
   }

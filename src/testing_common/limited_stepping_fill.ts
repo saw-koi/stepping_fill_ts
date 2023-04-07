@@ -10,6 +10,7 @@ export class DebugSteppingFillProcessorWithoutPropagation extends SteppingFillPr
 
 export class DebugFillNodeWithoutPropagation extends FillNode {
   createXNextNodeOutOfRange(): void {}
+  createSameXLaterNodeOutOfRangeOnCompensating(targetX: number, targetY: number): void {}
 }
 
 export class DebugSteppingFillProcessorWithoutExceedingQuadrant extends SteppingFillProcessor {

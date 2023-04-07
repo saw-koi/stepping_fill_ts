@@ -5,17 +5,20 @@ import { NodePriorityQueue } from './node_priority_queue';
 class FilledPointMap {
   width: number;
   height: number;
-  private points: Array<boolean>;
+  private points: Array<number|null>;
   constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
-    this.points = new Array(width*height).fill(false);
+    this.points = new Array(width*height).fill(null);
   }
   isPointFilled(x:number, y:number): boolean {
-    return this.points[y*this.width + x];
+    return this.points[y*this.width + x] !== null;
   }
-  markPointFilled(x:number, y:number) {
-    this.points[y*this.width + x] = true;
+  markPointFilled(x:number, y:number, baseId:number) {
+    this.points[y*this.width + x] = baseId;
+  }
+  getBaseIdOfPoint(x:number, y:number): number|null {
+    return this.points[y*this.width + x];
   }
 }
 
@@ -36,6 +39,11 @@ export class SteppingFillProcessor {
     const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
     this.fillNodePriorityQueue.addFillNode(this.createFillNode(x, y, 1, 1, base));
   }
+
+  getBasePosIdWhichFilledPoint(x:number, y:number): number|null {
+    return this.filledPointMap.getBaseIdOfPoint(x, y);
+  }
+
   isFilled(x:number, y:number): boolean {
     return this.filledPointMap.isPointFilled(x, y);
   }
@@ -61,8 +69,8 @@ export class SteppingFillProcessor {
     return this.fillNodePriorityQueue.getLength() > 0;
   }
 
-  fill(x:number, y:number) {
-    this.filledPointMap.markPointFilled(x, y);
+  fill(x:number, y:number, baseId:number) {
+    this.filledPointMap.markPointFilled(x, y, baseId);
     this.canvasFill.fillPoint(x, y);
   }
 
