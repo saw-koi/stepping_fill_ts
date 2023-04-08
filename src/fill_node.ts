@@ -72,6 +72,12 @@ export class FillNode {
         newPrev.active = false;
       }
     }
+    if( this.next == null && this.base.y !== this.y) {
+      if( this.fillProcessor.isWall(this.base.x+this.dx, this.y-this.dy) ) {
+        const newNext = this.createNext(this.base.x+this.dx, this.y-this.dy);
+        newNext.active = false;
+      }
+    }
     if( this.prev !== null && !this.prev.active ) {
       if( 0 < compareAbsPosFromSafePos(
         this.base.x, this.base.y,
@@ -82,6 +88,8 @@ export class FillNode {
         const prev = this.prev;
         if(next !== null) next.prev = prev;
         prev.next = next;
+
+        this.createYNextNodeOnOutOfPrevWallLimit();
         return false;
       }
     }
@@ -96,6 +104,14 @@ export class FillNode {
       this.y += this.dy;
       return true;
     }
+  }
+
+  createYNextNodeOnOutOfPrevWallLimit() {
+    const recentDistance = this.base.getDistance(this.x, this.y-this.dy);
+    const newBasePos = this.fillProcessor.createNodeBasePos(this.x, this.y-this.dy, this.base.distance + recentDistance);
+    const newNode = this.fillProcessor.createFillNode(this.x, this.y,
+      this.dx, this.dy, newBasePos, null, null);
+    this.fillProcessor.addNode(newNode);
   }
 
   compensateXNextNodeCreationOnGap() {

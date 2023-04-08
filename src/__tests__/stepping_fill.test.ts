@@ -238,3 +238,26 @@ test('head node turning by thick wall test', () => {
   while(proc.proceed()) {};
   expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
+
+test('right down crank filling test', () => {
+  const canvas = new MockCanvas([
+    's - - - - - - - - - - - ',
+    '- # # # # # # # # # # # ',
+    '- - # - - - - - - - - - ',
+    '# - - # - - - - - - - - ',
+    '- # - - # - - - - - - - ',
+    '- - # - - # - - - - - - ',
+    '- - - # - - # - - - - - ',
+  ],[
+    '* * * 1 2 3 4 5 6 7 8 9 ',
+    '* # # # # # # # # # # # ',
+    '* 1 # - - - - - - - - - ',
+    '# 2 3 # - - - - - - - - ',
+    '- # 4 5 # - - - - - - - ',
+    '- - # 6 7 # - - - - - - ',
+    '- - - # 8 9 # - - - - - ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
