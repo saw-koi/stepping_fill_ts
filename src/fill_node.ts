@@ -66,6 +66,12 @@ export class FillNode {
       if(prev !== null) prev.next = next;
       return false;
     }
+    if( this.prev === null && this.base.x !== this.x) {
+      if( this.fillProcessor.isWall(this.base.x, this.y+this.dy) ) {
+        const newPrev = this.createPrev(this.base.x, this.y+this.dy);
+        newPrev.active = false;
+      }
+    }
     if( this.prev !== null && !this.prev.active ) {
       if( 0 < compareAbsPosFromSafePos(
         this.base.x, this.base.y,
