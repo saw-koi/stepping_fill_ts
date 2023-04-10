@@ -12,6 +12,8 @@ export class DebugFillNodeWithoutPropagation extends FillNode {
   createXNextNodeOutOfRange(): void {}
   createYNextNodeOnOutOfPrevWallLimit(): void {}
   createSameXLaterNodeOutOfRangeOnCompensating(targetX: number, targetY: number): void {}
+  createXReverseNodeIfNotFilled() {};
+  createYReverseNodeIfNotFilled() {};
 }
 
 export class DebugSteppingFillProcessorWithoutExceedingQuadrant extends SteppingFillProcessor {

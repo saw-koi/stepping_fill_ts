@@ -261,3 +261,36 @@ test('right down crank filling test', () => {
   while(proc.proceed()) {};
   expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
+
+test('node over quadrant exceeding test', () => {
+  const canvas = new MockCanvas([
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - # # - - - - - - - - ',
+    '- - - # s - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+  ],[
+    '* * 9 5 * * * 5 6 9 * * * ',
+    '* * 9 5 * * * * 5 6 9 * * ',
+    '9 9 6 5 * * * * * 5 9 * * ',
+    '5 5 5 # # * * * * 5 9 * * ',
+    '* * * # 0 * * * * 5 6 9 * ',
+    '* * * * * * * * * 5 9 * * ',
+    '* * * * * * * * * 5 9 * * ',
+    '5 * * * * * * * 5 5 9 * * ',
+    '6 5 * * * * * 5 5 9 * * * ',
+    '9 6 5 5 5 5 5 5 9 * * * * ',
+    '* 9 9 9 6 9 9 9 * * * * * ',
+    '* * * * 9 * * * * * * * * ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});

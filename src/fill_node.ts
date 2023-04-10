@@ -99,10 +99,38 @@ export class FillNode {
       return false;
     } else {
       this.fillProcessor.fill(this.x, this.y, this.base.id);
+
+      if(this.prev === null || !this.prev.active) {
+        this.createXReverseNodeIfNotFilled();
+      }
+      if(this.next === null || !this.next.active) {
+        this.createYReverseNodeIfNotFilled();
+      }
+
       this.propagateOnHead();
 
       this.y += this.dy;
       return true;
+    }
+  }
+
+  createXReverseNodeIfNotFilled() {
+    if( !this.fillProcessor.isFilled(this.x-this.dx, this.y) ) {
+      const recentDistance = this.base.getDistance(this.x, this.y);
+      const newBasePos = this.fillProcessor.createNodeBasePos(this.x, this.y, this.base.distance + recentDistance);
+      const newNode = this.fillProcessor.createFillNode(this.x-this.dx, this.y,
+        -this.dx, this.dy, newBasePos, null, null);
+      this.fillProcessor.addNode(newNode);
+    }
+  }
+
+  createYReverseNodeIfNotFilled() {
+    if( !this.fillProcessor.isFilled(this.x, this.y-this.dy) ) {
+      const recentDistance = this.base.getDistance(this.x, this.y);
+      const newBasePos = this.fillProcessor.createNodeBasePos(this.x, this.y, this.base.distance + recentDistance);
+      const newNode = this.fillProcessor.createFillNode(this.x, this.y-this.dy,
+        this.dx, -this.dy, newBasePos, null, null);
+      this.fillProcessor.addNode(newNode);
     }
   }
 
