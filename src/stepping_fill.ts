@@ -37,7 +37,30 @@ export class SteppingFillProcessor {
     this.canvasFill = canvasFill;
     this.filledPointMap = new FilledPointMap(canvasFill.getWidth(), canvasFill.getHeight());
     const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
+    this.addInitialNodes(x, y);
+  }
+
+  addInitialNodes(x:number, y:number) {
+    const base = this.nodeBasePosFactory.createNodeBasePos(x, y, 0);
     this.fillNodePriorityQueue.addFillNode(this.createFillNode(x, y, 1, 1, base));
+    if( this.isWall(x, y-1) ) {
+      if( this.isWall(x-1, y)) {
+        return;
+      } else {
+        this.fillNodePriorityQueue.addFillNode(this.createFillNode(x-1, y,   -1,  1, base));
+        return;
+      }
+    } else {
+      if( this.isWall(x-1, y)) {
+        this.fillNodePriorityQueue.addFillNode(this.createFillNode(x  , y-1,  1, -1, base));
+        return;
+      } else {
+        this.fillNodePriorityQueue.addFillNode(this.createFillNode(x,   y-1,  1, -1, base));
+        this.fillNodePriorityQueue.addFillNode(this.createFillNode(x-1, y,   -1,  1, base));
+        this.fillNodePriorityQueue.addFillNode(this.createFillNode(x-1, y-1, -1, -1, base));
+        return;
+      }
+    }
   }
 
   getBasePosIdWhichFilledPoint(x:number, y:number): number|null {

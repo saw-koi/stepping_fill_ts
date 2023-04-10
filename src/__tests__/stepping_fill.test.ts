@@ -294,3 +294,38 @@ test('node over quadrant exceeding test', () => {
   while(proc.proceed()) {};
   expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
 });
+
+test('starting on vacant area test', () => {
+  const canvas = new MockCanvas([
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - s - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+    '- - - - - - - - - - - - - ',
+  ],[
+    '* * * * * * 9 * * * * * * ',
+    '* * * 9 9 9 5 9 9 9 * * * ',
+    '* * 9 5 1 1 1 1 1 5 9 * * ',
+    '* 9 5 1 * * * * * 1 5 9 * ',
+    '* 9 1 * * * * * * * 1 9 * ',
+    '* 9 1 * * * * * * * 1 9 * ',
+    '9 5 1 * * * 0 * * * 1 5 9 ',
+    '* 9 1 * * * * * * * 1 9 * ',
+    '* 9 1 * * * * * * * 1 9 * ',
+    '* * 5 * * * * * * 1 5 9 * ',
+    '* * 9 5 1 1 1 1 1 5 9 * * ',
+    '* * * 9 9 9 5 9 9 9 * * * ',
+    '* * * * * * 9 * * * * * * ',
+  ]);
+  const proc = new DebugSteppingFillProcessorWithoutExceedingQuadrant(canvas, ...canvas.getStartingXY());
+  while(proc.proceed()) {};
+  expect(canvas.getCurrentDataAsString()).toBe(canvas.getExpectedAsString());
+});
