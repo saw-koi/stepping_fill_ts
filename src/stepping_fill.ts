@@ -92,6 +92,14 @@ export class SteppingFillProcessor {
     return this.fillNodePriorityQueue.getLength() > 0;
   }
 
+  proceedToDistance(distance: number) {
+    while(
+      0 < this.fillNodePriorityQueue.getLength()
+      && this.fillNodePriorityQueue.getTopDistance() <= distance) {
+      this.proceed();
+    }
+  }
+
   fill(x:number, y:number, baseId:number) {
     this.filledPointMap.markPointFilled(x, y, baseId);
     this.canvasFill.fillPoint(x, y);

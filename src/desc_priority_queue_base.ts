@@ -70,6 +70,9 @@ export abstract class DescPriorityQueueBase<T> {
   getTopItem(): T {
     return this.heap[0][1];
   }
+  getTopDescPriority(): number {
+    return this.heap[0][0];
+  }
   getLength(): number {
     return this.heap.length;
   }

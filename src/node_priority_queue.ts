@@ -69,4 +69,7 @@ export class NodePriorityQueue extends ChangeableDescPriorityQueueBase<NodeConta
     const baseDistance = fillNode.base.distance;
     return baseDistance + Math.sqrt( dx*dx + dy*dy );
   }
+  getTopDistance():number {
+    return this.getTopDescPriority();
+  }
 }
